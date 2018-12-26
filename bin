@@ -10,22 +10,26 @@ process.stdin
   })
   .once('end', function () {
     var input = Buffer.concat(chunks).toString()
-    var lamos = require('lamos')
-    var parsers = [JSON.parse, lamos.parse]
-    var parsed
-    for (var i = 0; i < parsers.length; i++) {
-      try {
-        parsed = parsers[i](input)
-      } catch (error) {
-        // pass
-      }
-    }
-    if (!parsed) {
-      console.error('Could not parse input.')
-      process.exit(1)
-    }
-    outputGraph(parsed)
+    outputGraph(parseInput(input))
   })
+
+function parseInput (input) {
+  var lamos = require('lamos')
+  var parsers = [JSON.parse, lamos.parse]
+  var parsed
+  for (var i = 0; i < parsers.length; i++) {
+    try {
+      parsed = parsers[i](input)
+    } catch (error) {
+      // pass
+    }
+  }
+  if (!parsed) {
+    console.error('Could not parse input.')
+    process.exit(1)
+  }
+  return parsed
+}
 
 function outputGraph (tree) {
   print('digraph {')
