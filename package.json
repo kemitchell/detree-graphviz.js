@@ -1,0 +1,15 @@
+{
+  "name": "detree-graphviz",
+  "version": "0.0.0",
+  "description": "render detree decision trees as Graphviz directed graphs",
+  "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
+  "repository": "kemitchell/detree-graphviz.js",
+  "bin": "bin",
+  "files": [
+    "bin"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "lamos": "^3.0.4"
+  }
+}

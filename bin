@@ -1,0 +1,68 @@
+#!/usr/bin/env node
+var chunks = []
+process.stdin
+  .on('data', function (chunk) {
+    chunks.push(chunk)
+  })
+  .once('error', function (error) {
+    console.error(error)
+    process.exit(1)
+  })
+  .once('end', function () {
+    var input = Buffer.concat(chunks).toString()
+    var lamos = require('lamos')
+    var parsers = [JSON.parse, lamos.parse]
+    var parsed
+    for (var i = 0; i < parsers.length; i++) {
+      try {
+        parsed = parsers[i](input)
+      } catch (error) {
+        // pass
+      }
+    }
+    if (!parsed) {
+      console.error('Could not parse input.')
+      process.exit(1)
+    }
+    outputGraph(parsed)
+  })
+
+function outputGraph (tree) {
+  print('digraph {')
+  Object.keys(tree).forEach(function (questionKey) {
+    var question = tree[questionKey]
+    var questionID = quote(questionKey)
+    declare(questionID, 'rectangle', question.question)
+    Object.keys(question.answers).forEach(function (answerKey) {
+      var answer = question.answers[answerKey]
+      var answerID = quote(questionKey + ':' + answerKey)
+      declare(answerID, 'circle', answerKey)
+      if (answer.hasOwnProperty('decision')) {
+        link(questionID, answerID)
+        var decisionID = quote(answer.decision)
+        declare(decisionID, 'diamond', answer.decision)
+        link(answerID, decisionID)
+      } else {
+        link(questionID, answerID)
+        link(answerID, quote(answer.goto))
+      }
+    })
+  })
+  print('}')
+}
+
+function declare (id, shape, label) {
+  print(id + `[shape=${shape},label="${label}"];`)
+}
+
+function link (a, b) {
+  print(a + '->' + b + ';')
+}
+
+function quote (string) {
+  return '"' + string + '"'
+}
+
+function print (x) {
+  process.stdout.write(x + '\n')
+}
