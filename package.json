@@ -10,6 +10,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "lamos": "^3.0.4"
+    "lamos": "^3.0.4",
+    "wordwrap": "^1.0.0"
   }
 }

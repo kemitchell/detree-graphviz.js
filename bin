@@ -55,8 +55,10 @@ function outputGraph (tree) {
   print('}')
 }
 
+var wordwrap = require('wordwrap')(30)
+
 function declare (id, shape, label) {
-  print(id + `[shape=${shape},label="${label}"];`)
+  print(id + `[shape=${shape},label="${wordwrap(label)}"];`)
 }
 
 function link (a, b) {
